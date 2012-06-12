@@ -1,0 +1,63 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/trap_set.jpg");
+			background-repeat: no-repeat;
+		}
+		a#yeah_
+		{
+			position: absolute;
+			top: 165px;
+			/*left: 0px;*/
+		}
+		a#nah
+		{
+			position: absolute;
+			top: 165px;
+			left: 130px;
+		}
+		img
+		{
+			/*position: absolute;*/
+			/*bottom: 0px;*/
+			/*top: 164px;*/
+		}
+		#usr
+		{
+			position: absolute;
+			/*top: 0px;*/
+		}
+	</style>
+
+	<script type="text/javascript">
+		document.write(test());
+		alert(test());
+
+		function over()
+		{
+			// alert(document.yeah.src);
+			document.yeah.src = "../images/overlays/yeah_button.png";
+			// alert(document.yeah.src);
+		}
+		function out()
+		{
+			document.yeah.src = "../images/overlays/yeah_button_light.png";
+		}
+		function dismiss()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+    			{
+    			if(safari.extension.popovers[i].identifier == "placedTrap")
+						{
+						safari.extension.popovers[i].hide();
+						break;
+						}
+					}
+		}
+	</script>
+</head>
+<body>
+	<a id="nah" href="#"><img name="nah" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" alt="Dismiss" onClick="dismiss()" ></img></a>
+</body>

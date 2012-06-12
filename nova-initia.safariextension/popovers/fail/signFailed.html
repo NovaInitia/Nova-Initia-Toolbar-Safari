@@ -1,0 +1,35 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/signpost_failed.jpg");
+			background-repeat: no-repeat;
+		}
+		a#dismiss
+		{
+			position: absolute;
+			top: 165px;
+			left: 130px;
+		}
+	</style>
+
+	<script type="text/javascript">
+		function dismiss()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+    		{
+    			if(safari.extension.popovers[i].identifier == "signFailed")
+				{
+					safari.extension.popovers[i].hide();
+					break;
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<a id="dismiss" href="#">
+		<img name="nah" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" alt="Dismiss" onClick="dismiss()" ></img>
+	</a>
+</body>

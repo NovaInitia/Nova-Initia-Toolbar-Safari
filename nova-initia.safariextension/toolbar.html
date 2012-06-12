@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nova Initia</title>
+	<style type="text/css">
+		body
+		{
+			top: 4px;
+			bottom: 4px;
+		}
+		button
+		{
+			height: 22px;
+		}
+		#sg
+		{
+			position: absolute;
+			right:0px;
+		}
+		.divider
+		{
+			border: 1px gray double;
+			border-width: 0px 1px 0px 0px;
+			top: 2px;
+			left: 0px;
+			width: 2px;
+			height: 22px;
+			padding: 8px 0px 2px 0px;
+			margin: 0px 4px 0px 2px;
+		}
+	</style>
+
+	<script type="text/javascript" src="javascript/Main.js"></script>
+	<script type="text/javascript" src="javascript/User.js"></script>
+	<script type="text/javascript" src="javascript/Inventory.js"></script>
+	<script type="text/javascript" src="javascript/page.js"></script>
+	<script type="text/javascript" src="javascript/Tour.js"></script>
+	
+
+	<script type="text/javascript" src="javascript/algorithms.js"></script>
+	<script type="text/javascript" src="javascript/sha256.js"></script>
+	<script type="text/javascript" src="javascript/crypto-md5.js"></script>
+
+	<script type="text/javascript" src="javascript/jquery-1.7.2.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			//just need to make sure user is not already logged in
+			if(safari.extension.settings.stay_logged_in == false)
+			{
+				clearLogin();
+			}
+			else login(); //doLogin();
+		});
+
+		function doLogin()
+		{
+			if(safari.application.browserWindows.length > 1) return; //do not log in if user opens another window
+
+			var user = safari.extension.settings.username;
+			var pass = safari.extension.settings.password;
+
+			if(user=="" || pass=="" || user==null || pass==null)
+			{
+				showLogin();
+			}
+			else
+			{
+				login();
+			}
+		}
+	</script>
+</head>
+<body>
+	<span id="login_register">
+		<button id="login" onClick="doLogin()">Login</button>
+		<button id="register" onClick="register()">Register</button>
+	</span>
+
+	<span class="tool_buttons" hidden=true>
+		<button id="traps" onClick="placeTrap()"><img src="images/icons/trap.ico" /><span></span></button>
+		<button id="barrels" onClick="showBarrelPopover()"><img src="images/icons/barrel.ico" /><span></span></button>
+		<button id="signs" onClick="showSignPopover()"><img src="images/icons/sign.ico" /><span></span></button>
+		<button id="doors" onClick="showDoorPopover()"><img src="images/icons/doorway.ico" /><span></span></button>
+		<button id="spiders" onClick="placeSpider()"><img src="images/icons/spider.ico" /><span></span></button>
+		<button id="shields" onClick="toggleShield()"><img src="images/icons/no-shield.ico" /><span></span></button>
+
+		<span class="divider"></span>
+		
+		<button id="events" onClick="eventsClicked()" style="line-height: 22px;"><img height=16px />Events</button>
+		<button id="messages" onClick="messagesClicked()"><img src="images/icons/home.ico" /><span></span></button>
+		<button onClick="profileClicked()"><img height=16px />Profile</button>
+	</span>
+
+		<button id="preferences" onClick="preferences()"><img height=16px hidden=true/>Preferences</button><!-- Preferences button is always displayed -->
+	
+	<span class="tool_buttons" hidden=true>
+		<button onClick="logout()"><img height=16px />Log Out</button>
+
+		<button id="sg" onClick="sgButtonClicked()"><img src="images/icons/sg.ico" /><span>SG</span></button>
+	</span>
+</body>
+</html>

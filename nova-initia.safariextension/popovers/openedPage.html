@@ -1,0 +1,651 @@
+<html>
+	<head>
+		<title>Page Contents</title>
+		<style>
+		#body
+		{
+            background-image: url("../images/overlays/paper.png");
+		}
+		#trapContainer
+		{
+			position:relative;
+            text-align: center;
+		}
+		#yeahTrap
+		{
+			position: absolute;
+			top:205px;
+            left:25px;
+		}
+		#dismissTrap
+		{
+			position: absolute;
+			top:205px;
+			left:160px;
+		}
+		#sprung
+		{
+			position:absolute;
+			top:160px;
+		}
+		#barrelContainer
+		{
+			position:relative;
+            text-align: center;
+		}
+		#dismissBarrel
+		{
+			position:absolute;
+			top:205px;
+			left:160px;
+		}
+		#openBarrel
+		{
+			position: absolute;
+            left:25px;
+			top:205px;
+		}
+        #doorContainer
+        {
+            position:relative;
+            text-align: center;
+        }
+        #dismissDoor
+        {
+            position:absolute;
+            top:220px;
+            left:160px;
+        }
+        #openDoor
+        {
+            position:absolute;
+            top:220px;
+            left:25px;
+        }
+        #lootedList
+        {
+            background-image: url("../images/overlays/paper.png");
+        }
+        #barrelmessageForm
+        {
+            background-image: url("../images/overlays/paper.png");
+        }
+        #trapmessageForm
+        {
+            background-image: url("../images/overlays/paper.png");
+        }
+        #rateContainer
+        {
+            background-image: url("../images/overlays/paper.png");
+        }
+        #tourStartContainer
+        {
+            position:relative;
+            text-align:center;
+        }
+        #startTour
+        {
+            position: absolute;
+            top:205px;
+            left:25;
+        }
+        #dismissTour
+        {
+            position: absolute;
+            top:205px;
+            left:160px;
+        }
+        #inTourContainer
+        {
+            position:relative;
+            width:245px;
+        }
+        #linkA
+        {
+            position: absolute;
+            top:180px;
+            left:15;
+        }
+        #linkB
+        {
+            position: absolute;
+            top:180px;
+            left:130px;
+        }
+        #linkC
+        {
+            position: absolute;
+            top:115px;
+            left:220px;
+        }
+        #linkD
+        {
+            position: absolute;
+            top:15px;
+            left:220px;
+        }
+        #tourLeave
+        {
+            position: absolute;
+            top:165px;
+            left:130px;
+            text-decoration: none;
+            color: #000000;
+        }
+        #tourBack
+        {
+            position: absolute;
+            top:165px;
+            left:35;
+            text-decoration: none;
+            color: #000000
+        }
+        #completeTour
+        {
+            position: absolute;
+            top:185;
+            left:70;
+            text-decoration: none;
+            color: #000000
+        }
+        #tourComment
+        {
+            position: absolute;
+            top:5px;
+            left:10px;
+        }
+		</style>
+		<script type="text/javascript" src="../javascript/jquery-1.7.2.js"></script>
+        <script type="text/javascript" src="../javascript/Tour.js"></script>
+
+		<script>
+  			const myBars = safari.extension.bars;
+  			var barWindow = null;
+  			//set the barWindow to our novaInitiaBar
+    			for (var i = 0; i < myBars.length; ++i) 
+    			{
+    				if(myBars[i].identifier == "novaInitiaBar")
+    				{
+    					barWindow = myBars[i].contentWindow;
+    				}
+    			}
+    			//get ni_button used to display popovers
+    			  var ni_button;
+    				for(var i=0; i<safari.extension.toolbarItems.length; i++)
+						{
+							var item = safari.extension.toolbarItems[i];
+							if(item.identifier == "nova-initia-button") ni_button = item;
+						}
+                var currentDoor = 0;
+               
+    			//set initial visibility of traps,barrels,doors,ratings
+    			function setVisibility()
+    			{
+    				if(barWindow._page.Trap.visible != false)
+    				{
+    					document.getElementById("trapContainer").style.display="block";
+    				}
+    				if(barWindow._page.Barrel.visible != false)
+    				{
+    					 document.getElementById("barrelContainer").style.display="block";
+    				}
+                    if(barWindow._page.Door.count>0)
+                    {
+                        document.getElementById("doorContainer").style.display="block";
+                    }
+                    if(barWindow._page.Door.lastDoorid != undefined)
+                    {
+                        document.getElementById("rateContainer").style.display="block";
+                    }
+                    if(barWindow._page.tourStartPage == true)
+                    {
+                        document.getElementById("tourStartContainer").style.display="block";
+                    }
+                    if(barWindow._tour != null)
+                    {
+                        document.getElementById("inTourContainer").style.display="block";
+                        if(barWindow._tour.linkA != 0)
+                        {
+                            document.getElementById("linkA").style.display="block";
+                        }
+                        if(barWindow._tour.linkB != 0)
+                        {
+                            document.getElementById("linkB").style.display="block";
+                        }
+                        if(barWindow._tour.linkC != 0)
+                        {
+                            document.getElementById("linkC").style.display="block";
+                        }
+                        if(barWindow._tour.linkD != 0)
+                        {
+                            document.getElementById("linkD").style.display="block";
+                        }
+                        if(barWindow._tour.linkA == 0 && barWindow._tour.linkB == 0 && barWindow._tour.linkC == 0 && barWindow._tour.linkD == 0)
+                        {
+                            document.getElementById("completeTour").style.display="block";
+                        }
+                    }
+    			}
+                //jquery called when the page loads.nextdoor and prev door initialize the doorway
+    		$(document).ready(function () {
+    			setVisibility();
+                nextDoor();
+                prevDoor();
+                setTourComment();});
+    			//checks if all items dismissed, then hides popover if so
+    			function shouldHide()
+    			{
+    				if(document.getElementById("trapContainer").style.display=="none"&&document.getElementById("barrelContainer").style.display=="none" &&document.getElementById("lootedList").style.display=="none" && document.getElementById("barrelmessageForm").style.display=="none"&&document.getElementById("doorContainer").style.display=="none"&&document.getElementById("rateContainer").style.display=="none"&&document.getElementById("tourStartContainer").style.display=="none")
+    					{
+    						barWindow.animatePopover(hidePopover);
+    					}
+    			}
+                //resizes the popover to fit the objects contained within
+    			function resize()
+    			{
+    					shouldHide();
+ 						var size = 0;
+ 						if(document.getElementById("trapContainer").style.display=="block")
+ 						{
+ 							size += 270;
+ 						}
+ 						if(document.getElementById("barrelContainer").style.display=="block")
+ 						{
+ 							size +=270;
+ 						}
+ 						if(document.getElementById("trapmessageForm").style.display=="block")
+ 						{
+ 							size += 120;
+ 						}
+ 						if(document.getElementById("lootedList").style.display=="block")
+ 						{
+ 							size += 250;
+ 						}
+ 						if(document.getElementById("barrelmessageForm").style.display=="block")
+ 						{
+ 							size += 75;
+ 						}
+                        if(document.getElementById("doorContainer").style.display == "block")
+                        {
+                            size += 320;
+                        }
+                        if(document.getElementById("rateContainer").style.display =="block")
+                        {
+                            size += 200;
+                        }
+                        if(document.getElementById("tourStartContainer").style.display == "block")
+                        {
+                            size += 300;
+                        }
+                        if(document.getElementById("inTourContainer").style.display == "block")
+                        {
+                            size += 400;
+                        }
+    				        barWindow.animatePopover(null,ni_button.popover.height-size);
+    				 //ni_button.popover.height=size;
+    			}
+                //called when the trap yeah button is pressed. used to display the message div
+    			function trap_yeah_button()
+    			{
+    				if(document.getElementById("trapmessageForm").style.display=="none")
+    				{
+    					document.getElementById("trapmessageForm").style.display="block";
+                        document.getElementById("trapmessageTo").value = barWindow._page.Trap.username;
+    					resize();
+    				}
+    			}
+                //called when trap dismiss button is pressed. used to hid the trap div
+    			function trap_dismiss_button()
+    			{
+    				document.getElementById("trapContainer").style.display="none";
+    				document.getElementById("trapmessageForm").style.display="none";
+    				resize();
+    			}
+                //called when barrel open button is pressed.  used to retrieve and display the contents, as well as open the barrel message form
+    			function barrel_open_button()
+    			{
+    				var resp = barWindow.send_request("http://data.nova-initia.com/rf/remog/gift/"+barWindow._page.Barrel.barrelID+".json","GET","");
+    				var json = jQuery.parseJSON(resp.responseText);
+    				//document.write(resp.responseText);
+    				document.getElementById("lootedList").innerText = ("Loot Retrieved From " +barWindow._page.Barrel.username +  "'s Barrel:" + '\n') + 
+                    ("sg " + json.gift.Sg + '\n') + 
+                    ("traps " + json.gift.Tool0 + '\n') + 
+                    ("barrels " + json.gift.Tool1 + '\n') + 
+                    ("signs " + json.gift.Tool5 + '\n') + 
+                    ("doors " + json.gift.Tool4 + '\n') + 
+                    ("spiders " + json.gift.Tool2 +'\n') + 
+                    ("shields " + json.gift.Tool3 +'\n') + 
+                    ("Message: " + json.gift.Comment + '\n');
+                    //update inventory
+                    var inv = barWindow._user.inventory;
+                    var gift = json.gift;
+                    inv.sg = (inv.sg + gift.Sg);
+                    inv.traps = (inv.traps + gift.Tool0);
+                    inv.barrels = (inv.barrels + gift.Tool1);
+                    inv.signs = (inv.signs + gift.Tool5);
+                    inv.doors = (inv.doors + gift.Tool4);
+                    inv.spiders = (inv.spiders + gift.Tool2);
+                    inv.shields = (inv.shields + gift.Tool3);
+
+    				document.getElementById("lootedList").style.display="block";
+    				document.getElementById("barrelmessageForm").style.display="block";
+    				document.getElementById("barrelContainer").style.display="none";
+                    document.getElementById("barrelmessageTo").value = barWindow._page.Barrel.username;
+    				resize();
+    			}
+                //called when barrel dismiss button is pressed. hides the barrelcontainer div
+    			function barrel_dismiss_button()
+    			{
+    				document.getElementById("barrelContainer").style.display="none";
+    				document.getElementById("lootedList").style.display="none";
+    				resize();
+    			}
+                //used to hide the popover
+    			function hidePopover()
+    			{
+    				for(var i=0;i<safari.extension.popovers.length;i++)
+    				{
+    					if(safari.extension.popovers[i].identifier == "openedPage")
+						{
+							safari.extension.popovers[i].hide();
+							break;
+						}
+					}
+    			}
+                //called when trap sends a message
+    			function trapMessage()
+    			{
+    			var data = { "message" : { "ToID" : document.getElementById("trapmessageTo").value, "Subject" : document.getElementById("trapmessageSubject").value, "Contents" : document.getElementById("trapmessageContents").value}};
+
+    			barWindow.send_request("http://data.nova-initia.com/rf/remog/mail.json","POST",JSON.stringify(data));
+    			document.getElementById("trapmessageForm").style.display = "none";
+    			resize();
+    			}
+                function DecoratorTagIterableErrorResolver()
+                {
+                    safari.application.activeBrowserWindow.activeTab.url = "https://www.youtube.com/watch?v=4F4qzPbcFiA";
+                }
+                //called when barrel sends a message
+    			function barrelMessage()
+    			{
+    			var data = { "message" : { "ToID" : document.getElementById("barrelmessageTo").value, "Subject" : document.getElementById("barrelmessageSubject").value, "Contents" : document.getElementById("barrelmessageContents").value}};
+
+    			barWindow.send_request("http://data.nova-initia.com/rf/remog/mail.json","POST",JSON.stringify(data));
+    			document.getElementById("barrelmessageForm").style.display = "none";
+    			document.getElementById("lootedList").style.display = "none";
+    			resize();
+    			}
+                //called when the door open button is pressed.  redirects you and sets the last door which allows the rate box to come up on the next time
+                function door_open_button()
+                {
+                    var resp = barWindow.send_request("http://data.nova-initia.com/rf/remog/doorway/"+barWindow._page.Door.did[currentDoor]+".json","GET",null);
+                    var json = jQuery.parseJSON(resp.responseText);
+                    barWindow._page.addCurrentDoor(barWindow._page.Door.username[currentDoor],barWindow._page.Door.did[currentDoor]);
+                    safari.application.activeBrowserWindow.activeTab.url = json.doorway.Url;
+                }
+                //called when the door dismiss button is pressed. closes door div
+                function door_dismiss_button()
+                {
+                    document.getElementById("doorContainer").style.display="none";
+                    resize();
+                }
+                //cycles through the next door
+                function nextDoor()
+                {
+                    if(currentDoor<9 && currentDoor<barWindow._page.Door.count-1)
+                    {
+                        currentDoor++;
+                        if(barWindow._page.Door.comment[currentDoor]!="")
+                        {
+                            if(barWindow._page.Door.nsfw == false)
+                            {
+                                document.getElementById("doorHint").innerText=barWindow._page.Door.comment[currentDoor];
+                            }
+                            else
+                            {
+                                document.getElementById("doorHint").innerText=barWindow._page.Door.comment[currentDoor] + " NSFW";
+                            }
+                        }
+                        else
+                        {
+                            document.getElementById("doorHint").innerText="No Comment";
+                        }
+                        document.getElementById("currentd").innerText="Door " + (currentDoor+1) + " of "+ barWindow._page.Door.count;
+                    }
+                }
+                //cycles through the previous door
+                function prevDoor()
+                {
+                    if(currentDoor>0)
+                    {
+                        currentDoor--;
+                    }
+                    if(barWindow._page.Door.comment[currentDoor]!="")
+                    {
+                        if(barWindow._page.Door.nsfw == false)
+                        {
+                            document.getElementById("doorHint").innerText=barWindow._page.Door.comment[currentDoor];
+                        }
+                        else
+                        {
+                            document.getElementById("doorHint").innerText=barWindow._page.Door.comment[currentDoor] + " NSFW";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("doorHint").innerText="No Comment";
+                    }
+                    document.getElementById("currentd").innerText="Door " + (currentDoor+1) + " of "+barWindow._page.Door.count;
+                }
+                //provides a positive rating for the door: rating 1
+                function rateDoorUp()
+                {
+                var resp = barWindow.send_request("http://data.nova-initia.com/rf/remog/doorway/"+barWindow._page.Door.lastDoorid+"/rate/1.json","PUT",null);
+                document.getElementById("rateContainer").style.display="none";
+                resize();
+                }
+                //provides a negative rating for the door: rating 0
+                function rateDoorDown()
+                {
+                var resp = barWindow.send_request("http://data.nova-initia.com/rf/remog/doorway/"+barWindow._page.Door.lastDoorid+"/rate/0.json","PUT",null);
+                document.getElementById("rateContainer").style.display="none";
+                resize();
+                }
+                
+                /*
+                        var trackURL = "http://"+url_prefix+server_url+"/rf/remog/group/"+last_tour_ID+"/dismiss.json";
+                        last_tour_ID = "";
+                        this.send_request(trackURL,"PUT",null,true,this.process_dismiss_panel,false,null);
+                */
+                function start_tour_start_button()
+                {
+                    //document.write("here");
+                    barWindow._tour = new Tour(barWindow._page.tourStartID,barWindow,null);
+                    barWindow._tour.AddCurID(barWindow._tour.id);
+                    safari.application.activeBrowserWindow.activeTab.url = barWindow._tour.url;
+                }
+                function start_tour_dismiss_button()
+                {
+                    document.getElementById("tourStartContainer").style.display="block";
+                    resize();
+                }
+                function tour_back_button()
+                {
+                    if(barWindow._tour.prevStack.length>1)
+                    {
+                        var prev = barWindow._tour.getPrevID();
+                        //document.write("prev: "+prev);
+                        barWindow._tour = new Tour(prev,barWindow,barWindow._tour.prevStack);
+                        barWindow._tour.AddCurID(barWindow._tour.id);
+                        safari.application.activeBrowserWindow.activeTab.url = barWindow._tour.url;
+                    }
+                }
+                function tour_leave_button()
+                {
+                    barWindow._tour = undefined;
+                    document.getElementById("inTourContainer").style.display="none";
+                    resize();
+                }
+                function complete_tour_button()
+                {
+                    var theParams = { "u" : barWindow._urlHash, "d" : barWindow._domainHash };
+                    
+                    barWindow.send_request("http://data.nova-initia.com/rf/remog/group/"+barWindow._tour.groupID+"/complete","POST",theParams);
+                    safari.application.activeBrowserWindow.activeTab.url = "http://www.nova-initia.com/rf/remog/group/tour/"+barWindow._tour.groupID;
+                }
+                function linkA_button()
+                {
+                    barWindow._tour = new Tour(barWindow._tour.linkA,barWindow,barWindow._tour.prevStack);
+                    barWindow._tour.AddCurID(barWindow._tour.id);
+                    safari.application.activeBrowserWindow.activeTab.url = barWindow._tour.url;
+                }
+                function linkB_button()
+                {
+                    barWindow._tour = new Tour(barWindow._tour.linkB,barWindow,barWindow._tour.prevStack);
+                    barWindow._tour.AddCurID(barWindow._tour.id);
+                    safari.application.activeBrowserWindow.activeTab.url = barWindow._tour.url;
+                }
+                function linkC_button()
+                {
+                    barWindow._tour = new Tour(barWindow._tour.linkC,barWindow,barWindow._tour.prevStack);
+                    barWindow._tour.AddCurID(barWindow._tour.id);
+                    safari.application.activeBrowserWindow.activeTab.url = barWindow._tour.url;
+                }
+                function linkD_button()
+                {
+                    barWindow._tour = new Tour(barWindow._tour.linkD,barWindow,barWindow._tour.prevStack);
+                    barWindow._tour.AddCurID(barWindow._tour.id);
+                    safari.application.activeBrowserWindow.activeTab.url = barWindow._tour.url;
+                }
+                function linkA_hover()
+                {
+                    if(barWindow._tour.nsfw)
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.aNext +'\n' + " NSFW ";
+                    }
+                    else
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.aNext;
+                    }
+                }
+                function linkB_hover()
+                {
+                    if(barWindow._tour.nsfw)
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.bNext +'\n' + " NSFW ";
+                    }
+                    else
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.bNext;
+                    }
+                }
+                function linkC_hover()
+                {
+                    if(barWindow._tour.nsfw)
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.cNext +'\n' + " NSFW ";
+                    }
+                    else
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.cNext;
+                    }
+                }
+                function linkD_hover()
+                {
+                    if(barWindow._tour.nsfw)
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.dNext +'\n' + " NSFW ";
+                    }
+                    else
+                    {
+                        document.getElementById("tourComment").innerText = barWindow._tour.dNext;
+                    }
+                }
+                function setTourComment()
+                {
+                    document.getElementById("tourComment").innerText = barWindow._tour.comment;
+                }
+
+
+		</script>
+	</head>
+	<body>
+
+		<div id="trapContainer" style="display:none">
+            <h4><script type="text/javascript">document.write(barWindow._page.Trap.username);</script>'s <a style = "text-decoration: none;color: #000000;"href='#' onClick="DecoratorTagIterableErrorResolver()">trap</a> was sprung!</h4>
+			<img src="../images/overlays/trap_triggered.png"/>
+			<br>
+			<a id="yeahTrap" href="#"><img name="yeahTrap" src="../images/overlays/yeah_button_light.png" onMouseOver="src = '../images/overlays/yeah_button.png'" onMouseOut="src = '../images/overlays/yeah_button_light.png'" onClick="trap_yeah_button()" alt="Dismiss" ></img></a>
+			<a id="dismissTrap" href="#"><img name="dismisstrap" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" onClick="trap_dismiss_button()" alt="Dismiss" ></img></a>
+
+			<div id="trapmessageForm"style = "display:none;">
+			To:<input type="text" id="trapmessageTo" style="width:15em" /><br />
+  			Subject:<input type="text" id="trapmessageSubject" style="width:12.5em"/><br />
+  			Message:<input type="text" id="trapmessageContents" style="height:40px;width:12em" /><br />
+  			<input type="submit" value="Submit" onClick="trapMessage()" />
+			</div>
+		</div>
+
+		<div id="barrelContainer" style="display:none">
+			<h4>You found <script type="text/javascript">document.write(barWindow._page.Barrel.username);</script>'s barrel!</h4>
+
+			<img src="../images/overlays/barrel_found.jpg"/>
+			<a id="openBarrel" href="#"><img name="openBarrel" src="../images/overlays/open_button_light.png" onMouseOver="src = '../images/overlays/open_button.png'" onMouseOut="src = '../images/overlays/open_button_light.png'" onClick="barrel_open_button()" alt="Dismiss" ></img></a>
+			<a id="dismissBarrel" href="#"><img name="dismisstrap" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" onClick="barrel_dismiss_button()" alt="Dismiss" ></img></a>
+
+
+		</div>
+
+		<div id="lootedList" style = "display:none;">
+		</div>
+
+		<div id="barrelmessageForm"style = "display:none;" align ="left">
+			To:<input type="text" id="barrelmessageTo" align ="right" style="width:15em"/><br />
+  			Subject:<input type="text" id="barrelmessageSubject" align ="right" style="width:12.5em"/><br />
+  			Message:<input type="text" id="barrelmessageContents" style="height:40px;width:12em" align ="right"/><br />
+  			<input type="submit" value="Submit" onClick="barrelMessage()" />
+		</div>
+
+        <div id="doorContainer" style="display:none">
+            <h4 id = "doorHint"><script type="text/javascript">comment</script></h4>
+            <img src="../images/overlays/doorway_set.png"/>
+            <a id="openDoor" href="#"><img name="yeahDoor" src="../images/overlays/through_button_light.png" onMouseOver="src = '../images/overlays/through_button.png'" onMouseOut="src = '../images/overlays/through_button_light.png'" onClick="door_open_button()" alt="Dismiss" ></img></a>
+            <a id="dismissDoor" href="#"><img name="dismissDoor" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" onClick="door_dismiss_button()" alt="Dismiss" ></img></a>
+            <span id="doorscroll">
+                <button id = "prevDoor" onClick = "prevDoor()" style ="display:inline;" >PREV</button>
+                <div id= "currentd" style ="display:inline;">current door</div>
+                <button id = "nextDoor" onClick = "nextDoor()" style ="display:inline;">NEXT</button>
+            </span>
+        </div>
+
+        <div id="rateContainer" style="display:none">
+            <center>
+                <h4 id="ratemessage">You Stepped Through <script>document.write(barWindow._page.Door.lastDoorusername)</script>'s Doorway!</h4>
+                <a id="rateDoorUp" href="#"><img name="check" src="../images/overlays/check.png" onClick="rateDoorUp()" alt="rate up" ></img></a>
+                <a id="rateDoorDown" href="#"><img name="cross" src="../images/overlays/cross.png" onClick="rateDoorDown()" alt="rate down" ></img></a>
+            </center>
+        </div>
+
+        <div id="tourStartContainer" style="display:none">
+            <center><h5>Click 'Start' below to begin this tour!</h5></center>
+            <img src="../images/overlays/signpost_set.jpg"/>
+            <br>
+            <a id="startTour" href="#"><img name="startTour" src="../images/overlays/start_button_light.png" onMouseOver="src = '../images/overlays/start_button.png'" onMouseOut="src = '../images/overlays/start_button_light.png'" onClick="start_tour_start_button()" alt="Dismiss" ></img></a>
+            <a id="dismissTour" href="#"><img name="dismissTour" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" onClick="start_tour_dismiss_button()" alt="Dismiss" ></img></a>
+        </div>
+
+        <div id="inTourContainer" style="display:none">
+            <img src="../images/overlays/signpost_set.jpg"/>
+            <br>
+            <span id="tourComment">No Comment</span>
+            <a id="tourBack" href="javascript:tour_back_button()">Back</a>
+            <a id="tourLeave" href="javascript:tour_leave_button()">Leave Tour</a>
+            <a id="completeTour" href="javascript:complete_tour_button()" style = "display:none">Complete Tour</a>
+
+            <a id="linkA" style="display:none" href="#"><img name="linkA" src="../images/overlays/1sg.png" onMouseOver="linkA_hover()" onMouseOut="setTourComment()" onClick="linkA_button()" alt="Dismiss" ></img></a>
+            <a id="linkB" style="display:none" href="#"><img name="linkB" src="../images/overlays/2sg.png" onMouseOver="linkB_hover()" onMouseOut="setTourComment()" onClick="linkB_button()" alt="Dismiss" ></img></a>
+            <a id="linkC" style="display:none" href="#"><img name="linkC" src="../images/overlays/3sg.png" onMouseOver="linkC_hover()" onMouseOut="setTourComment()" onClick="linkC_button()" alt="Dismiss" ></img></a>
+            <a id="linkD" style="display:none" href="#"><img name="linkD" src="../images/overlays/4sg.png" onMouseOver="linkD_hover()" onMouseOut="setTourComment()" onClick="linkD_button()" alt="Dismiss" ></img></a>
+        </div>
+	</body>
+</html>

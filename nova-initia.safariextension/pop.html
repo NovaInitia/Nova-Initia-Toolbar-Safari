@@ -1,0 +1,30 @@
+<html>
+<head>
+	<script type="text/javascript">
+		function pop_test()
+		{
+			const myBars = safari.extension.bars;
+			for (var i = 0; i < myBars.length; ++i)
+			{
+				var barWindow = myBars[i].contentWindow;
+				// barWindow.doSomething();
+				var myWindow = safari.application.activeBrowserWindow;
+				if (myBars[i].browserWindow === myWindow)
+				{
+					// barWindow.doSomethingSpecial();
+					barWindow.popover_callback("from popover");
+				}
+			}
+
+			safari.extension.globalPage.contentWindow.foobar();
+		}
+	</script>
+</head>
+<body>
+	<img src="images/overlays/trap_set.jpg" >
+	</img>
+
+	<button onClick="pop_test();">Hide</button>
+
+</body>
+</html>

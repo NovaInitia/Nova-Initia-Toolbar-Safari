@@ -1,0 +1,75 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/spider_triggered.png");
+			background-repeat: no-repeat;
+		}
+		#yeah_
+		{
+			position: absolute;
+			top: 125px;
+			/*left: 0px;*/
+		}
+		a#nah
+		{
+			position: absolute;
+			top: 165px;
+			left: 130px;
+		}
+		img
+		{
+			/*position: absolute;*/
+			/*bottom: 0px;*/
+			/*top: 164px;*/
+		}
+		#usr
+		{
+			position: absolute;
+			/*top: 0px;*/
+		}
+	</style>
+
+	<script type="text/javascript">
+		  	const myBars = safari.extension.bars;
+  			var barWindow = null;
+  			//set the barWindow to our novaInitiaBar
+    			for (var i = 0; i < myBars.length; ++i) 
+    			{
+    				if(myBars[i].identifier == "novaInitiaBar")
+    				{
+    					barWindow = myBars[i].contentWindow;
+    				}
+    			}
+
+		document.write(test());
+		alert(test());
+
+		function over()
+		{
+			// alert(document.yeah.src);
+			document.yeah.src = "../images/overlays/yeah_button.png";
+			// alert(document.yeah.src);
+		}
+		function out()
+		{
+			document.yeah.src = "../images/overlays/yeah_button_light.png";
+		}
+		function dismiss()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+    			{
+    			if(safari.extension.popovers[i].identifier == "trapBlocked")
+						{
+						safari.extension.popovers[i].hide();
+						break;
+						}
+					}
+		}
+	</script>
+</head>
+<body>
+	<h5 id = "yeah_"> <script>document.write(barWindow._page.Spider.username);</script>'s <br> spider caused the trap to <br> explode in your face!</h5>
+	<a id="nah" href="#"><img name="nah" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" alt="Dismiss" onClick="dismiss()" ></img></a>
+</body>

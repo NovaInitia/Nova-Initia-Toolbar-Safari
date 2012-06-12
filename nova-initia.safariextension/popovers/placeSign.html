@@ -1,0 +1,89 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/paper.png");
+		}
+		input[type="text"]
+		{
+			width: 150px;
+		}
+		textarea
+		{
+			width:150px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../javascript/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="../javascript/Main.js"></script>
+
+	<script type="text/javascript">
+		const myBars = safari.extension.bars;
+		var barWindow = null;
+		//set the barWindow to our novaInitiaBar
+		for (var i = 0; i < myBars.length; ++i) 
+		{
+			if(myBars[i].identifier == "novaInitiaBar")
+			{
+				barWindow = myBars[i].contentWindow;
+			}
+		}
+		// //get ni_button
+		// var ni_button;
+		// for(var i=0; i<safari.extension.toolbarItems.length; i++)
+		// {
+		// 	var item = safari.extension.toolbarItems[i];
+		// 	if(item.identifier == "nova-initia-button") ni_button = item;
+		// }
+		
+		function dismiss()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+			{
+				if(safari.extension.popovers[i].identifier == "placeSign")
+				{
+					safari.extension.popovers[i].hide();
+					break;
+				}
+			}
+		}
+		function setSign()
+		{
+			barWindow.placeSign(
+				$("#title").val(),
+				$("#comments").val(),
+				$("#nsfw").is(":checked")
+			);
+
+			$("form").hide();
+			barWindow.animatePopover(null, 100);
+		}
+	</script>
+</head>
+<h3>Place a Signpost</h3>
+<body>
+<form action="setSign()">
+	<table>
+		<tr>
+			<td>Title:</td>
+			<td><input type="text" id="title"></input></td>
+		</tr>
+		<tr>
+			<td style="vertical-align:top;">Comments:</td>
+			<td><textarea id="comments"></textarea></td>
+		</tr>
+		<tr>
+			<td>NSFW?</td>
+			<td><input type="checkbox" id="nsfw"></input></td>
+			
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">
+				<input type="button" value="Place Signpost" onclick="setSign()" />
+				<input type="reset" value="Cancel" onclick="dismiss()" />
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
