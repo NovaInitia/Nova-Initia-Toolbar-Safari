@@ -13,6 +13,16 @@
 		{
 			width: 160px;
 		}
+		#error
+		{
+			color: red;
+			font-size: 10pt;
+			font-family: sans-serif;
+			font-weight: bold;
+			position: absolute;
+			top: 30px;
+			left: 80px;
+		}
 	</style>
 
 	<script type="text/javascript" src="../javascript/jquery-1.7.2.js"></script>
@@ -57,7 +67,7 @@
 
 		function doLogin()
 		{
-			// if(!checkFields()) return;
+			if(!checkFields()) return;
 
 			barWindow.login(
 				$("#username").val(),
@@ -69,18 +79,33 @@
 		}
 		function checkFields()
 		{
-			// if($("#username").val() == ""){
-			// 	$("#username").val("Enter a username");
-			// 	$("#username").select();
-			// }
-			// else if($("#password").val() == ""){
+			$("#error").html("");
 
-			// }
+			if($("#username").val() == "")
+			{
+				$("#error").append("Enter a username");
+				$("#username").select();
+			}
+			else if($("#password").val() == "")
+			{
+				$("#error").append("Enter a password");
+				$("#password").select();
+			}
+			else
+			{
+				return true; //passed validation
+			}
+			return false; //failed validation
+		}
+		function errorMsg(msg) //display an error message in this popover
+		{
+			$("#error").html(msg);
 		}
 	</script>
 </head>
-<h3>Log in</h3>
 <body>
+<h3>Log in</h3>
+<span id="error"></span>
 <form action="doLogin()">
 	<table>
 		<tr>

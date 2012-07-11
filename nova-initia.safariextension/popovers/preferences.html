@@ -76,10 +76,6 @@
 </head>
 <h3>Preferences</h3>
 <body>
-	<script type="text/javascript">
-		//document.write("test");
-		//document.write(user());
-	</script>
 	<span>current user: <script type="text/javascript">document.write(user());</script></span>
 	<br />
 	<input type="checkbox">Stay Logged in</input>
@@ -87,22 +83,4 @@
 	<button onclick="switchUser()">Switch User</button>
 	<button onclick="barWindow.logout();dismiss();">Log out</button>
 	<button onclick="dismiss()">Close</button>
-
-<!--
-	<table>
-		<tr>
-			<td>Title:</td>
-			<td><input type="text" id="title"></input></td>
-		</tr>
-		<tr>
-			<td style="vertical-align:top;">Comments:</td>
-			<td><textarea id="comments"></textarea></td>
-		</tr>
-		<tr>
-			<td colspan="2" style="text-align: center;">
-				<input type="reset" value="Cancel" onclick="dismiss()" />
-			</td>
-		</tr>
-	</table>
--->
 </body>

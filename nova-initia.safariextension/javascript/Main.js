@@ -19,6 +19,16 @@ var _domainHash = null;
 
 var _stayLoggedIn = true;
 
+function init()
+{
+	//create global pointer to the ni_button
+	for(var i=0; i<safari.extension.toolbarItems.length; i++)
+	{
+		var item = safari.extension.toolbarItems[i];
+		if(item.identifier == "nova-initia-button") _ni_button = item;
+	}
+}
+
 function getBaseURI()
 {
 	return _baseURI;
@@ -31,25 +41,20 @@ function showLogin()
 
 function login(usr,pwd)
 {
-	var user = safari.extension.settings.username;
-	var pass = safari.extension.settings.password;
-
-	if(user=="" || pass=="" || user==null || pass==null)
+	var user, pass;
+	if(usr && pwd) //login with new username/password
 	{
-		if(usr&&pwd)
-		{
-			user = usr;
-			pass = pwd;
-		}
-		else
-		{
-			user = prompt("Enter your username:", "");
-			pass = prompt("Enter you password:", "");
-		}
-
-		safari.extension.settings.username = user;
-		safari.extension.settings.password = pass;
+		user = usr;
+		pass = pwd;
 	}
+	else //login using saved username/password
+	{
+		user = safari.extension.settings.username;
+		pass = safari.extension.settings.password;
+	}
+
+	safari.extension.settings.username = user;
+	safari.extension.settings.password = pass;
 
 	_stayLoggedIn = safari.extension.settings.stay_logged_in;
 
@@ -62,13 +67,6 @@ function login(usr,pwd)
 	//initialize page
 	_page = new Page();
 
-	//create global pointer to the ni_button
-	for(var i=0; i<safari.extension.toolbarItems.length; i++)
-	{
-		var item = safari.extension.toolbarItems[i];
-		if(item.identifier == "nova-initia-button") _ni_button = item;
-	}
-
 	//work with pass
 	pass = sha256(pass);
 	pass = pass + key;
@@ -79,7 +77,15 @@ function login(usr,pwd)
 	
 	var resp = send_request(login_url, "POST", params);
 
-	// console.log(resp.responseText);
+	
+	if(/Error:/.test(resp.responseText)) //if the response is an error message
+	{
+		getPopover("loginPopover").contentWindow.errorMsg(resp.responseText);
+
+		//safari.extension.settings.username = null;
+		//safari.extension.settings.password = null;
+		//return;
+	}
 
 	var json = jQuery.parseJSON(resp.responseText);
 	//fill in fields in user
@@ -122,6 +128,8 @@ function login(usr,pwd)
 function logout()
 {
 	_user = null;
+	if(!_stayLoggedIn) clearLogin();
+
 	$("#login_register").show();
 	$(".tool_buttons").hide();
 	$("#preferences > img").hide();
@@ -141,8 +149,6 @@ function clearLogin()
 	//remove locally saved credentials
 	safari.extension.settings.username = null;
 	safari.extension.settings.password = null;
-
-	logout();
 }
 
 function placeTrap()
@@ -948,4 +954,16 @@ function removeAllPopovers()
 	safari.extension.removePopover("placeBarrel");
 	safari.extension.removePopover("placeDoor");
 	safari.extension.removePopover("placeSign");
+}
+
+//get a reference to existing popover by its id
+function getPopover(id_str)
+{
+	for(var i=0; i<safari.extension.popovers.length; i++)
+	{
+		if(safari.extension.popovers[i].identifier == id_str)
+		{
+			return safari.extension.popovers[i];
+		}
+	}
 }

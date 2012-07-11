@@ -46,11 +46,12 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			//just need to make sure user is not already logged in
-			if(safari.extension.settings.stay_logged_in == false)
+			if(safari.extension.settings.stay_logged_in == true)
 			{
-				clearLogin();
+				login();
 			}
-			else login(); //doLogin();
+
+			init();
 		});
 
 		function doLogin()
