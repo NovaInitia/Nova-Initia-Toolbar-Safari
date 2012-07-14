@@ -693,7 +693,10 @@ function openedPage()
 	_page.Door.lastDoorusername = current_door_un;
 	_page.Door.lastDoorid=current_door_id;
 
-	var url_and_domain = UrlToHash(getURL(),true);
+	var pg_url = getURL();
+	// since LASTKEY is appended to nova-initia.com pages, we must remove it to process the page:
+	pg_url = pg_url.replace(/\?LASTKEY=\w*$/, "");
+	var url_and_domain = UrlToHash(pg_url,true);
 	var url_hash = url_and_domain['url'];
 	var domain_hash = url_and_domain['domain'];
 	var key = _key;
@@ -802,11 +805,6 @@ function openedPage()
 		objectsOnPage++;
 	}
 
-
-
-
-//	alert(resp.responseText);
-	//alert("ID: " + json.pageSet[1].ID);
 	//keep debugging this too
 	//Frame();
 	removeAllPopovers();
@@ -816,10 +814,9 @@ function openedPage()
 	{
 		rate = 200;
 	}
-	if(objectsOnPage+ doorsOnPage>0)
-	{
-		
 
+	if( (objectsOnPage + doorsOnPage + rate) > 0)
+	{
 		var myPop = safari.extension.createPopover("openedPage", safari.extension.baseURI + "popovers/openedPage.html", 300, (270*objectsOnPage) + (320*doorsOnPage) + rate);
 
 		_ni_button.popover = myPop;
