@@ -3,7 +3,7 @@
 	<style type="text/css">
 		body
 		{
-			background-image: url("../../images/overlays/signpost_failed.jpg");
+			background-image: url("../images/overlays/barrel_set.jpg");
 			background-repeat: no-repeat;
 		}
 		a#dismiss
@@ -19,7 +19,7 @@
 		{
 			for(var i=0;i<safari.extension.popovers.length;i++)
     		{
-    			if(safari.extension.popovers[i].identifier == "signFailed")
+    			if(safari.extension.popovers[i].identifier == "barrelSet")
 				{
 					safari.extension.popovers[i].hide();
 					break;
@@ -30,6 +30,6 @@
 </head>
 <body>
 	<a id="dismiss" href="#">
-		<img name="nah" src="../../images/overlays/dismiss_button_light.png" onMouseOver="src = '../../images/overlays/dismiss_button.png'" onMouseOut="src = '../../images/overlays/dismiss_button_light.png'" alt="Dismiss" onClick="dismiss()" ></img>
+		<img name="nah" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" alt="Dismiss" onClick="dismiss()" ></img>
 	</a>
 </body>

@@ -251,6 +251,8 @@ function placeBarrel(sg, traps, barrels, spiders, shields, doors, signs, comment
 	var giver_ID = "1";
 	var limit = _user.playerClass==giver_ID ? 100 : 10;
 
+	var msg=""; //error message to display
+
 	if (((sg/10)
 		+traps
 		+barrels
@@ -259,23 +261,28 @@ function placeBarrel(sg, traps, barrels, spiders, shields, doors, signs, comment
 		+doors
 		+signs) > limit)
 	{
-		//TODO reject barrel
+		proceed = false;
+		msg = "Too many items";
 	}
 
-	// if(sg > _user.inventory.sg)
-	// if(traps > _user.inventory.traps)
-	// if(barrels > _user.inventory.barrels)
-	// if(spiders > _user.inventory.spiders)
-	// if(shields > _user.inventory.shields)
-	// if(doors > _user.inventory.doors)
-	// if(signs > _user.inventory.signs)
+	if(sg > _user.inventory.sg ||
+		traps > _user.inventory.traps || 
+		barrels > _user.inventory.barrels || 
+		spiders > _user.inventory.spiders || 
+		shields > _user.inventory.shields || 
+		doors > _user.inventory.doors || 
+		signs > _user.inventory.signs)
+		{
+			proceed = false;
+			msg = "Inventory too low.";
+		}
 
 	if(traps==0&&barrels==0&&spiders==0&&shields==0&&doors==0&&signs==0&&sg==0)
 	{
 		proceed=false;
-		alert("Cannot Stash Empty Barrels");
-		console.log("Cannot Stash Empty Barrels");
+		msg = "Cannot Stash Empty Barrels";
 	}
+
 	if(proceed)
 	{
 		var theParams = {
@@ -295,13 +302,12 @@ function placeBarrel(sg, traps, barrels, spiders, shields, doors, signs, comment
 		{
 			// NovaInitia.Toolbar.check_tool_set(theRes,barrel_tool_id);
 			var tmpBarrelInfo = JSON.parse(theRes.responseText);
-			console.log(tmpBarrelInfo);
 
 			if(tmpBarrelInfo.error)
 			{
 				if(tmpBarrelInfo.error == "low inventory")
 				{
-					alert("Error: low inventory");
+					console.log("Error: low inventory");
 				}
 				else alert(tmpBarrelInfo.error);
 				
@@ -309,18 +315,39 @@ function placeBarrel(sg, traps, barrels, spiders, shields, doors, signs, comment
 
 			if(tmpBarrelInfo.fail == true)
 			{
-				alert("Barrel failed");
+				displayPopover("barrelFailed", "popovers/fail/barrelFailed.html");
+				console.log("Barrel failed");
 			}
 
 		}
 		else
 		{
-			alert("Barrel Stash received a bad response!");
+			console.log("Barrel Stash received a bad response!");
 		}
-	}
 
-	updateButtons();
+		//display success popover
+		displayPopover("barrelSet", "popovers/barrelSet.html");
+		//update inventory
+		var inv = _user.inventory;
+		inv.sg -= sg;
+		inv.traps -= traps;
+		inv.barrels -= barrels;
+			inv.barrels -= 1; //always need to decrement the barrel being placed
+		inv.signs -= signs;
+		inv.doors -= doors;
+		inv.spiders -= spiders;
+		inv.shields -= shields;
+
+		updateButtons();
+	}
+	else //barrel failed (proceed==false)
+	{
+		displayPopover("barrelFailed", "popovers/fail/barrelFailed.html");
+		console.log(msg);
+		//getPopover("barrelFailed").contentWindow.errorMsg(msg);
+	}
 }
+
 function showSignPopover()
 {
 	displayPopover("placeSign", "popovers/placeSign.html");

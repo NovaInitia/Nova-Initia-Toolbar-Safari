@@ -45,13 +45,13 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			init();
+			
 			//just need to make sure user is not already logged in
 			if(safari.extension.settings.stay_logged_in == true)
 			{
 				login();
 			}
-
-			init();
 		});
 
 		function doLogin()

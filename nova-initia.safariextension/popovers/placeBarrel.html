@@ -54,39 +54,16 @@
 
 		function setBarrel()
 		{
-			var a = $("#sg").val();
-			var b = $("#traps").val();
-			var c = $("#barrels").val();
-			var d = $("#spiders").val();
-			var d = $("#shields").val();
-			var e = $("#doors").val();
-			var f = $("#signs").val();
-			var g = $("#message").val();
-
-		 // 	barWindow.placeBarrel(
-			// $("#sg").val(),
-			// $("#traps").val(),
-			// $("#barrels").val(),
-			// $("#spiders").val(),
-			// $("#shields").val(),
-			// $("#doors").val(),
-			// $("#signs").val(),
-			// $("#message").val()
-		 // 	);
-
-			barWindow.placeBarrel(a,b,c,d,e,f,g);
-
-		 	//update inventory
-			var inv = barWindow._user.inventory;
-			inv.sg -= a;
-			inv.traps -= b;
-			inv.barrels -= c;
-				inv.barrels -= 1; //always need to decrement the barrel being placed
-			inv.signs -= d;
-			inv.doors -= e;
-			inv.spiders -= f;
-			inv.shields -= g;
-			barWindow.updateButtons();
+		 	barWindow.placeBarrel(
+				$("#sg").val(),
+				$("#traps").val(),
+				$("#barrels").val(),
+				$("#spiders").val(),
+				$("#shields").val(),
+				$("#doors").val(),
+				$("#signs").val(),
+				$("#message").val()
+		 	);
 
 			$("form").hide();
 			// barWindow.animatePopover(null, 100);

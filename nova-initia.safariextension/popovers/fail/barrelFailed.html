@@ -3,7 +3,7 @@
 	<style type="text/css">
 		body
 		{
-			background-image: url("../../images/overlays/signpost_failed.jpg");
+			background-image: url("../../images/overlays/barrel_failed.jpg");
 			background-repeat: no-repeat;
 		}
 		a#dismiss
@@ -12,23 +12,38 @@
 			top: 165px;
 			left: 130px;
 		}
+		span#error
+		{
+			color: red;
+			font-size: 10pt;
+			font-family: sans-serif;
+			font-weight: bold;
+			position: absolute;
+			top: 145px;
+			left: 10px;
+		}
 	</style>
-
+	<!--<script type="text/javascript" src="../../javascript/jquery-1.7.2.js"></script>-->
 	<script type="text/javascript">
 		function dismiss()
 		{
 			for(var i=0;i<safari.extension.popovers.length;i++)
     		{
-    			if(safari.extension.popovers[i].identifier == "signFailed")
+    			if(safari.extension.popovers[i].identifier == "barrelFailed")
 				{
 					safari.extension.popovers[i].hide();
 					break;
 				}
 			}
 		}
+		function errorMsg(msg) //display an error message in this popover
+		{
+			document.getElementById("error").innerHTML = msg;
+		}
 	</script>
 </head>
 <body>
+	<span id="error"></span>
 	<a id="dismiss" href="#">
 		<img name="nah" src="../../images/overlays/dismiss_button_light.png" onMouseOver="src = '../../images/overlays/dismiss_button.png'" onMouseOut="src = '../../images/overlays/dismiss_button_light.png'" alt="Dismiss" onClick="dismiss()" ></img>
 	</a>
