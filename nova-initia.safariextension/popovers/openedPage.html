@@ -381,7 +381,14 @@
                     var resp = barWindow.send_request("http://data.nova-initia.com/rf/remog/doorway/"+barWindow._page.Door.did[currentDoor]+".json","GET",null);
                     var json = jQuery.parseJSON(resp.responseText);
                     barWindow._page.addCurrentDoor(barWindow._page.Door.username[currentDoor],barWindow._page.Door.did[currentDoor]);
-                    safari.application.activeBrowserWindow.activeTab.url = json.doorway.Url;
+
+                    var url = json.doorway.Url;
+                    var match = /(^http:\/\/|^https:\/\/)/.test(url); //make sure url starts with http or https
+                    if(!match) //prepend 'http://' for safari
+                    {
+                        url = "http://"+url;
+                    }
+                    safari.application.activeBrowserWindow.activeTab.url = url;
                 }
                 //called when the door dismiss button is pressed. closes door div
                 function door_dismiss_button()
@@ -403,12 +410,12 @@
                             }
                             else
                             {
-                                document.getElementById("doorHint").innerText=barWindow._page.Door.comment[currentDoor] + " NSFW";
+                                document.getElementById("doorHint").innerHTML=barWindow._page.Door.comment[currentDoor] + "<span style='color:red;'> (NSFW)</span>";
                             }
                         }
                         else
                         {
-                            document.getElementById("doorHint").innerText="No Comment";
+                            document.getElementById("doorHint").innerText="(No Comment)";
                         }
                         document.getElementById("currentd").innerText="Door " + (currentDoor+1) + " of "+ barWindow._page.Door.count;
                     }
@@ -428,12 +435,12 @@
                         }
                         else
                         {
-                            document.getElementById("doorHint").innerText=barWindow._page.Door.comment[currentDoor] + " NSFW";
+                            document.getElementById("doorHint").innerHTML=barWindow._page.Door.comment[currentDoor] + "<span style='color:red;'> (NSFW)</span>";
                         }
                     }
                     else
                     {
-                        document.getElementById("doorHint").innerText="No Comment";
+                        document.getElementById("doorHint").innerText="(No Comment)";
                     }
                     document.getElementById("currentd").innerText="Door " + (currentDoor+1) + " of "+barWindow._page.Door.count;
                 }

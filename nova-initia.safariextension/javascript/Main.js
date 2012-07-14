@@ -586,17 +586,14 @@ function eventsClicked()
 {
 	safari.application.activeBrowserWindow.openTab().url = "http://www.nova-initia.com/remog/events?LASTKEY="+_user.lastkey;
 }
-
 function messagesClicked()
 {
 	safari.application.activeBrowserWindow.openTab().url = "http://www.nova-initia.com/remog/mail?LASTKEY="+_user.lastkey;
 }
-
 function profileClicked()
 {
 	safari.application.activeBrowserWindow.openTab().url = "http://www.nova-initia.com/remog/user/"+_user.username+"?LASTKEY="+_user.lastkey;
 }
-
 function sgButtonClicked()
 {
 	safari.application.activeBrowserWindow.openTab().url = "http://www.nova-initia.com/remog/trade?LASTKEY="+_user.lastkey;
@@ -715,10 +712,14 @@ function openedPage()
 	{
 		var usernamerequest = send_request("http://data.nova-initia.com/rf/remog/user/"+json.pageSet[0].USERID+".json","GET",null);
 		var usernamejson = jQuery.parseJSON(usernamerequest.responseText);
-		console.log(usernamerequest.responseText);
 		_page.setTrap(usernamejson.user.UserName,true);
 		objectsOnPage++;
 		_user.inventory.setShieldOn(usernamejson.user.isShielded); //update shields in iventory
+
+		//update current user's shield and sg
+		var tmp = jQuery.parseJSON(send_request("http://data.nova-initia.com/rf/remog/user/"+_ID+".json","GET",null).responseText);
+		_user.inventory.setShieldOn(tmp.user.isShielded);
+		_user.inventory.sg = tmp.user.Sg;
 	}
 	else
 	{
