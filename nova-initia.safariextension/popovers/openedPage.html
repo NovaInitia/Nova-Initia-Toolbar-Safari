@@ -62,6 +62,17 @@
             top:220px;
             left:25px;
         }
+        #door-username
+        {
+            position: absolute;
+            top: 200px;
+            left: 30px;
+            text-decoration: none;
+            color: #000000;
+        }
+        a#door-username:hover {
+            text-decoration: underline;
+        }
         #lootedList
         {
             background-image: url("../images/overlays/paper.png");
@@ -271,7 +282,7 @@
                         }
                         if(document.getElementById("rateContainer").style.display =="block")
                         {
-                            size += 200;
+                            size += 185;
                         }
                         if(document.getElementById("tourStartContainer").style.display == "block")
                         {
@@ -432,6 +443,14 @@
                     {
                         document.getElementById("doorHint").innerText="(No Comment)";
                     }
+
+                    var tmp_usr = barWindow._page.Door.username[currentDoor]; //get user who placed door
+                    document.getElementById("door-username").innerHTML = tmp_usr;
+                    $("#door-username").unbind(); //remove all previous onClick events
+                    $("#door-username").bind("click", function(){
+                        safari.application.activeBrowserWindow.openTab().url = "http://www.nova-initia.com/remog/user/"+tmp_usr;
+                    });
+                    
                     document.getElementById("currentd").innerText="Door " + (currentDoor+1) + " of "+barWindow._page.Door.count;
                 }
                 //provides a positive rating for the door: rating 1
@@ -606,6 +625,7 @@
         <div id="doorContainer" style="display:none">
             <h4 id = "doorHint"><script type="text/javascript">comment</script></h4>
             <img src="../images/overlays/doorway_set.png"/>
+            <a id="door-username" style="" href='#' onClick=""></a>
             <a id="openDoor" href="#"><img name="yeahDoor" src="../images/overlays/through_button_light.png" onMouseOver="src = '../images/overlays/through_button.png'" onMouseOut="src = '../images/overlays/through_button_light.png'" onClick="door_open_button()" alt="Dismiss" ></img></a>
             <a id="dismissDoor" href="#"><img name="dismissDoor" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" onClick="door_dismiss_button()" alt="Dismiss" ></img></a>
             <span id="doorscroll">
