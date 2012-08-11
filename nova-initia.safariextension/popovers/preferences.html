@@ -1,0 +1,86 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/paper.png");
+		}
+		input[type="text"]
+		{
+			width: 150px;
+		}
+		textarea
+		{
+			width:150px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../javascript/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="../javascript/Main.js"></script>
+
+	<script type="text/javascript">
+		const myBars = safari.extension.bars;
+		var barWindow = null;
+		//set the barWindow to our novaInitiaBar
+		for (var i = 0; i < myBars.length; ++i)
+		{
+			if(myBars[i].identifier == "novaInitiaBar")
+			{
+				barWindow = myBars[i].contentWindow;
+			}
+		}
+
+		$(document).ready(
+			function(){
+				$("input:checkbox").prop("checked",barWindow._stayLoggedIn);
+
+				$("input:checkbox").change(
+					function(){
+						barWindow._stayLoggedIn = $(this).is(":checked");
+						safari.extension.settings.stay_logged_in = $(this).is(":checked");
+				});
+			});		
+		
+		
+		function dismiss()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+			{
+				if(safari.extension.popovers[i].identifier == "preferences")
+				{
+					safari.extension.popovers[i].hide();
+					break;
+				}
+			}
+		}
+		function setSign()
+		{
+			barWindow.placeSign(
+				$("#title").val(),
+				$("#comments").val(),
+				$("#nsfw").is(":checked")
+			);
+		}
+		function switchUser()
+		{
+			barWindow.logout();
+			barWindow.clearLogin();
+			// barWindow.login();
+			barWindow.showLogin();
+		}
+		function user()
+		{
+			return barWindow._user.username;
+		}
+	</script>
+</head>
+<h3>Preferences</h3>
+<body>
+	<span>current user: <script type="text/javascript">document.write(user());</script></span>
+	<br />
+	<input type="checkbox">Stay Logged in</input>
+	<button onclick="barWindow.clearLogin();dismiss();">Clear Saved Logins</button>
+	<button onclick="switchUser()">Switch User</button>
+	<button onclick="barWindow.logout();dismiss();">Log out</button>
+	<button onclick="dismiss()">Close</button>
+</body>

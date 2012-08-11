@@ -1,0 +1,123 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/paper.png");
+		}
+		input[type="text"]
+		{
+			width: 150px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../javascript/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="../javascript/Main.js"></script>
+	<script type="text/javascript" src="../javascript/algorithms.js"></script>
+
+	<script type="text/javascript">
+		const myBars = safari.extension.bars;
+		var barWindow = null;
+		//set the barWindow to our novaInitiaBar
+		for (var i = 0; i < myBars.length; ++i) 
+		{
+			if(myBars[i].identifier == "novaInitiaBar")
+			{
+				barWindow = myBars[i].contentWindow;
+			}
+		}
+		//get ni_button
+		var ni_button;
+		for(var i=0; i<safari.extension.toolbarItems.length; i++)
+		{
+			var item = safari.extension.toolbarItems[i];
+			if(item.identifier == "nova-initia-button") ni_button = item;
+		}
+
+		function hidePopover()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+			{
+				if(safari.extension.popovers[i].identifier == "placeBarrel")
+				{
+					safari.extension.popovers[i].hide();
+					break;
+				}
+			}
+		}
+
+		function dismiss()
+		{
+			$("body").hide();
+			barWindow.animatePopover(hidePopover);
+		}
+
+		function setBarrel()
+		{
+		 	barWindow.placeBarrel(
+				$("#sg").val(),
+				$("#traps").val(),
+				$("#barrels").val(),
+				$("#spiders").val(),
+				$("#shields").val(),
+				$("#doors").val(),
+				$("#signs").val(),
+				$("#message").val()
+		 	);
+
+			$("form").hide();
+			// barWindow.animatePopover(null, 100);
+			hidePopover();
+		}
+	</script>
+</head>
+<h3>Stash a Barrel</h3>
+<body>
+<form action="setBarrel()">
+	<table>
+		<tr>
+			<td>SG:</td>
+			<td><input id="sg" type="text" value="0"></input></td>
+		</tr>
+		<tr>
+			<td>Traps:</td>
+			<td><input id="traps" type="text" value="0"></input></td>
+		</tr>
+		<tr>
+			<td>Barrels:</td>
+			<td><input id="barrels" type="text" value="0"></input></td>
+		</tr>
+		<tr>
+			<td>Spiders:</td>
+			<td><input id="spiders" type="text" value="0"></input></td>
+		</tr>
+		<tr>
+			<td>Shields:</td>
+			<td><input id="shields" type="text" value="0"></input></td>
+		</tr>
+		<tr>
+			<td>Doorways:</td>
+			<td><input id="doors" type="text" value="0"></input></td>
+		</tr>
+		<tr>
+			<td>Signposts:</td>
+			<td><input id="signs" type="text" value="0"></input></td>
+		</tr>
+		<tr>
+			<td style="vertical-align:top;">Message:</td>
+			<td><textarea id="message" style="width:150px;"></textarea></td>
+		</tr>
+		<tr>
+			<td>Label:</td>
+			<td><input type="text"></input></td>
+		</tr>
+
+		<tr>
+			<td colspan="2" style="text-align: center;">
+				<input type="submit" value="Stash" onclick="setBarrel()" />
+				<input type="reset" value="Dismiss" onclick="dismiss()" />
+			</td>
+		</tr>
+	</table>
+</form>
+</body>

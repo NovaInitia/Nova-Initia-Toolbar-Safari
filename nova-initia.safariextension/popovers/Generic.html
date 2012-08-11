@@ -1,0 +1,58 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/trap_set.jpg");
+			background-repeat: no-repeat;
+		}
+		a#yeah_
+		{
+			position: absolute;
+			top: 165px;
+			/*left: 0px;*/
+		}
+		a#nah
+		{
+			position: absolute;
+			top: 165px;
+			left: 130px;
+		}
+		img
+		{
+			/*position: absolute;*/
+			/*bottom: 0px;*/
+			/*top: 164px;*/
+		}
+		#usr
+		{
+			position: absolute;
+			/*top: 0px;*/
+		}
+	</style>
+
+	<script type="text/javascript">
+		document.write(test());
+		alert(test());
+
+		function over()
+		{
+			// alert(document.yeah.src);
+			document.yeah.src = "../images/overlays/yeah_button.png";
+			// alert(document.yeah.src);
+		}
+		function out()
+		{
+			document.yeah.src = "../images/overlays/yeah_button_light.png";
+		}
+	</script>
+</head>
+<body>
+	<!-- <img src="../../images/overlays/trap_set.jpg" alt="trap set" ></img> -->
+
+	<span id="usr">blah_blah_replace's Trap was sprung!</span>
+
+	<a id="yeah_" href="#"><img name="yeah" src="../images/overlays/yeah_button_light.png" onMouseOver="over()" onMouseOut="out()" alt="Yeah" ></img></a>
+	<a id="nah" href="#"><img name="nah" src="../images/overlays/dismiss_button_light.png" onMouseOver="src = '../images/overlays/dismiss_button.png'" onMouseOut="src = '../images/overlays/dismiss_button_light.png'" alt="Dismiss" ></img></a>
+
+</body>
