@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>DefaultValue</key>
+		<string></string>
+		<key>Key</key>
+		<string>username</string>
+		<key>Secure</key>
+		<true/>
+	</dict>
+	<dict>
+		<key>Key</key>
+		<string>password</string>
+		<key>Secure</key>
+		<true/>
+	</dict>
+	<dict>
+		<key>DefaultValue</key>
+		<true/>
+		<key>Key</key>
+		<string>stay_logged_in</string>
+		<key>Title</key>
+		<string>Stay logged in?</string>
+		<key>TrueValue</key>
+		<true/>
+		<key>Type</key>
+		<string>CheckBox</string>
+	</dict>
+</array>
+</plist>

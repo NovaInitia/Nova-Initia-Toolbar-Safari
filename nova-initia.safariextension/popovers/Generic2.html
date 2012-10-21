@@ -1,0 +1,65 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("traptriggered_overlay_replace");
+			background-repeat: no-repeat;
+		}
+		a#yeah_
+		{
+			position: absolute;
+			top: 165px;
+			/*left: 0px;*/
+		}
+		a#nah
+		{
+			position: absolute;
+			top: 165px;
+			left: 130px;
+		}
+		img
+		{
+			/*position: absolute;*/
+			/*bottom: 0px;*/
+			/*top: 164px;*/
+		}
+		#usr
+		{
+			position: absolute;
+			/*top: 0px;*/
+		}
+	</style>
+
+	<script type="text/javascript">
+		document.write(test());
+		alert(test());
+
+		function over()
+		{
+			// alert(document.yeah.src);
+			document.yeah.src = "yeah_button_hover_replace";
+			// alert(document.yeah.src);
+		}
+		function out()
+		{
+			document.yeah.src = "yeah_button_replace";
+		}
+
+		var trap_img = "traptriggered_overlay_replace";
+		var yeah = "yeah_button_replace";
+		var yeah2 = "yeah_button_hover_replace";
+		var dis = "dismiss_button_replace";
+		var dis2 = "dismiss_button_hover_replace";
+		var username = "username_replace";
+	</script>
+</head>
+<body>
+	<!-- <img src="../../images/overlays/trap_set.jpg" alt="trap set" ></img> -->
+
+	<span id="usr">username_replace's Trap was sprung!</span>
+
+	<a id="yeah_" href="#"><img name="yeah" src="yeah_button_replace" onMouseOver="over()" onMouseOut="out()" alt="Yeah" ></img></a>
+	<a id="nah" href="#"><img name="nah" src="dismiss_button_replace" onMouseOver="src = 'dismiss_button_hover_replace'" onMouseOut="src = 'dismiss_button_replace'" alt="Dismiss" ></img></a>
+
+</body>

@@ -1,0 +1,99 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/paper.png");
+		}
+		input[type="text"]
+		{
+			width: 160px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../javascript/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="../javascript/Main.js"></script>
+
+	<script type="text/javascript">
+		const myBars = safari.extension.bars;
+		var barWindow = null;
+		//set the barWindow to our novaInitiaBar
+		for (var i = 0; i < myBars.length; ++i) 
+		{
+			if(myBars[i].identifier == "novaInitiaBar")
+			{
+				barWindow = myBars[i].contentWindow;
+			}
+		}
+		//get ni_button
+		var ni_button;
+		for(var i=0; i<safari.extension.toolbarItems.length; i++)
+		{
+			var item = safari.extension.toolbarItems[i];
+			if(item.identifier == "nova-initia-button") ni_button = item;
+		}
+
+		function hidePopover()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+			{
+				if(safari.extension.popovers[i].identifier == "placeDoor")
+				{
+					safari.extension.popovers[i].hide();
+					break;
+				}
+			}
+		}
+
+		function dismiss()
+		{
+			$("body").hide();
+			barWindow.animatePopover(hidePopover);
+		}
+
+		function setDoor()
+		{
+			barWindow.placeDoor(
+				$("#url").val(),
+				$("#hint").val(),
+				$("#comment").val(),
+				$("#nsfw").is(":checked")
+			);
+
+			$("form").hide();
+			//barWindow.animatePopover(null, 100);
+		}
+	</script>
+</head>
+<h3>Open a Doorway</h3>
+<body>
+<form action="setDoor()">
+	<table>
+		<tr>
+			<td>URL:</td>
+			<td><input id="url" type="text" value="http://www.nova-initia.com" onclick="$('#url').select();"></input></td>
+		</tr>
+		<tr>
+			<td>Hint:</td>
+			<td><input id="hint" type="text"></input></td>
+		</tr>
+		<tr>
+			<td style="vertical-align:top;">Comment:</td>
+			<td><textarea id="comment" style="width:160px;"></textarea></td>
+		</tr>
+		<tr>
+			<td style="text-align:right;">
+				<input type="checkbox" disabled="disabled"></input><br />
+				<input type="checkbox" id="nsfw"></input>
+			</td>
+			<td>Add to Existing Chain<br />NSFW?</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">
+				<input type="button" value="Open Doorway" onclick="setDoor()" />
+				<input type="reset" value="Cancel" onclick="dismiss()" />
+			</td>
+		</tr>
+	</table>
+</form>
+</body>

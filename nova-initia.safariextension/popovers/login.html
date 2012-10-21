@@ -1,0 +1,128 @@
+<html>
+<head>
+	<style type="text/css">
+		body
+		{
+			background-image: url("../images/overlays/paper.png");
+		}
+		input[type="text"]
+		{
+			width: 160px;
+		}
+		input[type="password"]
+		{
+			width: 160px;
+		}
+		#error
+		{
+			color: red;
+			font-size: 10pt;
+			font-family: sans-serif;
+			font-weight: bold;
+			position: absolute;
+			top: 30px;
+			left: 80px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../javascript/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="../javascript/Main.js"></script>
+
+	<script type="text/javascript">
+		const myBars = safari.extension.bars;
+		var barWindow = null;
+		//set the barWindow to our novaInitiaBar
+		for (var i = 0; i < myBars.length; ++i) 
+		{
+			if(myBars[i].identifier == "novaInitiaBar")
+			{
+				barWindow = myBars[i].contentWindow;
+			}
+		}
+		//get ni_button
+		var ni_button;
+		for(var i=0; i<safari.extension.toolbarItems.length; i++)
+		{
+			var item = safari.extension.toolbarItems[i];
+			if(item.identifier == "nova-initia-button") ni_button = item;
+		}
+
+		function hidePopover()
+		{
+			for(var i=0;i<safari.extension.popovers.length;i++)
+			{
+				if(safari.extension.popovers[i].identifier == "loginPopover")
+				{
+					safari.extension.popovers[i].hide();
+					break;
+				}
+			}
+		}
+
+		function dismiss()
+		{
+			$("body").hide();
+			//barWindow.animatePopover(hidePopover);
+			hidePopover();
+		}
+
+		function doLogin()
+		{
+			if(!checkFields()) return;
+
+			barWindow.login(
+				$("#username").val(),
+				$("#password").val()
+			);
+
+			$("form").hide();
+			dismiss();
+		}
+		function checkFields()
+		{
+			$("#error").html("");
+
+			if($("#username").val() == "")
+			{
+				$("#error").append("Enter a username");
+				$("#username").select();
+			}
+			else if($("#password").val() == "")
+			{
+				$("#error").append("Enter a password");
+				$("#password").select();
+			}
+			else
+			{
+				return true; //passed validation
+			}
+			return false; //failed validation
+		}
+		function errorMsg(msg) //display an error message in this popover
+		{
+			$("#error").html(msg);
+		}
+	</script>
+</head>
+<body>
+<h3>Log in</h3>
+<span id="error"></span>
+<form action="doLogin()">
+	<table>
+		<tr>
+			<td>username:</td>
+			<td><input id="username" type="text"></input></td>
+		</tr>
+		<tr>
+			<td>password:</td>
+			<td><input id="password" type="password"></input></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">
+				<input type="submit" value="Log in" onclick="doLogin()" />
+				<input type="reset" value="Cancel" onclick="dismiss()" />
+			</td>
+		</tr>
+	</table>
+</form>
+</body>

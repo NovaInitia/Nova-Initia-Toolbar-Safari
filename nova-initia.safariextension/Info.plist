@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>Team Fedora</string>
+	<key>Builder Version</key>
+	<string>534.57.2</string>
+	<key>CFBundleDisplayName</key>
+	<string>nova-initia</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.nova-initia</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Bars</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>toolbar.html</string>
+				<key>Identifier</key>
+				<string>novaInitiaBar</string>
+				<key>Label</key>
+				<string>nova-initia-toolbar</string>
+			</dict>
+		</array>
+		<key>Global Page</key>
+		<string>Global.html</string>
+		<key>Popovers</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>pop.html</string>
+				<key>Height</key>
+				<real>300</real>
+				<key>Identifier</key>
+				<string>temp</string>
+				<key>Width</key>
+				<real>300</real>
+			</dict>
+		</array>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Identifier</key>
+				<string>nova-initia-button</string>
+				<key>Image</key>
+				<string>images/icons/icon.png</string>
+				<key>Label</key>
+				<string>nova-initia-button</string>
+				<key>Menu</key>
+				<string></string>
+				<key>Popover</key>
+				<string></string>
+				<key>Tool Tip</key>
+				<string>Nova Initia</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict/>
+	</dict>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Website</key>
+	<string>http://www.nova-initia.com</string>
+</dict>
+</plist>
